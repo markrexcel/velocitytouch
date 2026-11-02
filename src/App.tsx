@@ -19,6 +19,7 @@ import {
   Play
 } from 'lucide-react';
 import { initAds, showInterstitial, BANNER_POSITION } from './ads.js';
+import FloatingSidebar from './FloatingSidebar.jsx';
 
 const EMPTY_METRICS = { avgLatency: 0, pollingRate: 0, jitter: 0, smoothnessScore: 0, samples: 0 };
 
@@ -355,7 +356,7 @@ export default function App() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
           {/* Touch Latency & Swipe Smoothness Canvas (7 cols) */}
-          <section className="lg:col-span-7 bg-slate-900/70 border border-slate-800 rounded-2xl p-5 backdrop-blur-md shadow-xl flex flex-col justify-between">
+          <section id="touch-test" className="scroll-mt-24 lg:col-span-7 bg-slate-900/70 border border-slate-800 rounded-2xl p-5 backdrop-blur-md shadow-xl flex flex-col justify-between">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2.5">
                 <div className="p-2 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
@@ -556,7 +557,7 @@ export default function App() {
         </div>
 
         {/* Section 2: Animation Scale Control Panel & Simulator */}
-        <section className="bg-slate-900/70 border border-slate-800 rounded-2xl p-6 backdrop-blur-md shadow-xl space-y-6">
+        <section id="simulator" className="scroll-mt-24 bg-slate-900/70 border border-slate-800 rounded-2xl p-6 backdrop-blur-md shadow-xl space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
             <div>
               <div className="flex items-center gap-2">
@@ -707,7 +708,7 @@ export default function App() {
         </section>
 
         {/* Section 3: Android Developer Options Guide */}
-        <section id="dev-guide" className="bg-slate-900/70 border border-slate-800 rounded-2xl p-6 backdrop-blur-md shadow-xl space-y-6">
+        <section id="dev-guide" className="scroll-mt-24 bg-slate-900/70 border border-slate-800 rounded-2xl p-6 backdrop-blur-md shadow-xl space-y-6">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
               <Sliders className="w-6 h-6" />
@@ -759,6 +760,18 @@ export default function App() {
         </section>
 
       </main>
+
+      {/* Floating left-edge quick panel */}
+      <FloatingSidebar
+        metrics={metrics}
+        hasData={hasData}
+        preset={selectedPreset}
+        onPreset={setSelectedPreset}
+        onReset={resetCanvasTest}
+        onShare={() => setShowShareModal(true)}
+        topInset={(BANNER_POSITION === 'TOP' ? bannerHeight : 0) + 72}
+        bottomInset={BANNER_POSITION === 'BOTTOM' ? bannerHeight : 0}
+      />
 
       {/* Viral Benchmark Share Card Modal */}
       {showShareModal && (
