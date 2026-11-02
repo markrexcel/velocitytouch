@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # VelocityTouch Motion Lab — Android app
 
 React + Tailwind app packaged as a real Android app with Capacitor, with Google AdMob ads
@@ -63,3 +64,6 @@ ADMOB_APP_ID=ca-app-pub-xxx~yyy python3 scripts/patch-android.py
 npx cap sync android
 cd android && ./gradlew assembleDebug
 ```
+=======
+# velocitytouch
+>>>>>>> a04ad756b0ee94a9b1cc981b7b5dad7632b4b942
