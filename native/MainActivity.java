@@ -1,4 +1,4 @@
-package __PACKAGE__;
+package com.velocitytouch.motionlab;
 
 import android.os.Bundle;
 import com.getcapacitor.BridgeActivity;
@@ -6,8 +6,9 @@ import com.getcapacitor.BridgeActivity;
 public class MainActivity extends BridgeActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        // Local plugins must be registered before super.onCreate()
-        registerPlugin(MetaAdsPlugin.class);
         super.onCreate(savedInstanceState);
+        
+        // Register custom native Meta ads plugin after the bridge initializes
+        registerPlugin(MetaAdsPlugin.class);
     }
 }
