@@ -12,6 +12,11 @@ env:
   VITE_ADMOB_BANNER_ID: ${{ vars.ADMOB_BANNER_ID }}
   VITE_ADMOB_INTERSTITIAL_ID: ${{ vars.ADMOB_INTERSTITIAL_ID }}
   VITE_BANNER_POSITION: ${{ vars.BANNER_POSITION }}
+  # Meta Audience Network (optional). Set AD_PROVIDER to 'meta' to use it.
+  VITE_AD_PROVIDER: ${{ vars.AD_PROVIDER }}
+  VITE_META_BANNER_ID: ${{ vars.META_BANNER_ID }}
+  VITE_META_INTERSTITIAL_ID: ${{ vars.META_INTERSTITIAL_ID }}
+  VITE_META_TEST: ${{ vars.META_TEST }}
   VERSION_CODE: ${{ github.run_number }}
   HAS_KEYSTORE: ${{ secrets.KEYSTORE_BASE64 != '' }}
 
@@ -43,7 +48,7 @@ jobs:
       - name: Generate app icon and splash
         run: npx --yes @capacitor/assets generate --android --iconBackgroundColor '#020617' --splashBackgroundColor '#020617'
 
-      - name: Add AdMob App ID to manifest
+      - name: Patch Android project (ads, SDKs, version)
         run: python3 scripts/patch-android.py
 
       - name: Sync web assets

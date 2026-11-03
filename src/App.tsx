@@ -18,7 +18,7 @@ import {
   Info,
   Play
 } from 'lucide-react';
-import { initAds, showInterstitial, BANNER_POSITION } from './ads.js';
+import { initAds, showInterstitial, noteUserBusy, BANNER_POSITION } from './ads.js';
 import FloatingSidebar from './FloatingSidebar.jsx';
 
 const EMPTY_METRICS = { avgLatency: 0, pollingRate: 0, jitter: 0, smoothnessScore: 0, samples: 0 };
@@ -154,10 +154,12 @@ export default function App() {
   }, [isTesting]);
 
   const handlePointerDown = (e) => {
+    noteUserBusy();
     lastTimeRef.current = e.nativeEvent.timeStamp;
   };
 
   const handlePointerMove = (e) => {
+    noteUserBusy();
     const canvas = canvasRef.current;
     if (!canvas) return;
     const rect = canvas.getBoundingClientRect();
@@ -206,11 +208,14 @@ export default function App() {
   };
 
   const resetCanvasTest = () => {
+    const hadTest = metrics.samples > 0;
     trailRef.current = [];
     intervalsRef.current = [];
     delaysRef.current = [];
     setIsTesting(false);
     setMetrics(EMPTY_METRICS);
+    // Calm break between two tests (ads.js enforces cooldown, session cap and idle rules)
+    if (hadTest) setTimeout(() => showInterstitial(), 600);
   };
 
   // On-device advisor: recommendations from the measured touch data (no network, no API key)
@@ -254,8 +259,6 @@ export default function App() {
         gamingTips: tips
       });
       setAiLoading(false);
-      // Interstitial after a result is shown (natural pause point)
-      setTimeout(() => showInterstitial(), 1500);
     }, 500);
   };
 

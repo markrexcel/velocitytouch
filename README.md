@@ -13,31 +13,47 @@ recommendations from those measurements on the device (no server, no API key).
 2. Open **Actions > Build Android APK > Run workflow**.
 3. When it finishes (about 5–8 min), download **VelocityTouch-debug-apk** and install `app-debug.apk`.
 
-## 2. Turn on your real ads
+## 2. Ads (Meta Audience Network or Google AdMob)
 
-Until you do this, the app shows Google TEST ads (safe, no earnings).
-In your repo go to **Settings > Secrets and variables > Actions > Variables** and add:
+The app has one banner (bottom by default) and a full-screen ad, from either network.
+Set these in your GitHub repo: **Settings > Secrets and variables > Actions > Variables**, then re-run the workflow.
+
+**Option A - Meta Audience Network**
 
 | Variable | Value |
 |---|---|
-| `ADMOB_APP_ID` | your App ID, `ca-app-pub-XXXX~YYYY` |
-| `ADMOB_BANNER_ID` | your banner ad unit, `ca-app-pub-XXXX/ZZZZ` |
+| `AD_PROVIDER` | `meta` |
+| `META_BANNER_ID` | your banner placement ID, like `1234567890_1234567890` |
+| `META_INTERSTITIAL_ID` | your interstitial placement ID |
+| `META_TEST` | `true` while testing (Meta test ads), remove or `false` for live |
+
+Meta has no shared test ID: get your own placement IDs from Meta Monetization Manager first.
+If `AD_PROVIDER` is `meta` but an ID is missing, the app falls back to AdMob test ads.
+
+**Option B - Google AdMob** (default)
+
+| Variable | Value |
+|---|---|
+| `ADMOB_APP_ID` | `ca-app-pub-XXXX~YYYY` |
+| `ADMOB_BANNER_ID` | `ca-app-pub-XXXX/ZZZZ` |
 | `ADMOB_INTERSTITIAL_ID` | your interstitial ad unit |
-| `BANNER_POSITION` | `BOTTOM` (default) or `TOP` |
 
-Create these in admob.google.com (add app, then create a Banner and an Interstitial ad unit).
-Re-run the workflow. Never click your own live ads.
+With none of these set you get Google TEST ads (safe, no earnings).
+Optional for both: `BANNER_POSITION` = `TOP` or `BOTTOM` (default).
 
-Ads: one adaptive banner (AdMob allows one banner at a time), and an interstitial after
-"Get Recommendations" and when the Share card closes, at most once every 45 seconds.
-EU/UK users get the Google consent form automatically.
+**How the full-screen ad avoids annoying users** (rules in `src/ads.js`):
+never in the first minute, at least 90 s apart, at most 4 per session, never within 5 s of the user touching
+the test area, and only after the user's own action (closing the Share card, or resetting a finished test).
+It never appears while reading results.
+
+Note: using Meta needs Android 7.0 (API 24) or newer, so the build sets `minSdkVersion` to 24.
+Never click your own live ads.
 
 ### Using demo ads first, real ads later
 
-You can publish with the demo (test) ads while AdMob approves your units. They earn nothing and
-show a "Test Ad" label. When approved, add the 4 variables above and re-run the workflow, then
-upload the new `.aab` as an update. Use the same keystore and package name
-(`com.velocitytouch.motionlab`). The version number goes up automatically on every build.
+Publish with test ads while your ad accounts get approved. Later add the variables above, re-run the
+workflow and upload the new `.aab` as an update (same keystore and package name
+`com.velocitytouch.motionlab`). The version number goes up automatically on every build.
 
 ## 3. Publish on Google Play (signed release)
 
