@@ -1,4 +1,9 @@
-package __PACKAGE__;
+package com.velocitytouch.motionlab;
+
+import android.app.Activity;
+import android.view.Gravity;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import android.app.Activity;
 import android.view.Gravity;
