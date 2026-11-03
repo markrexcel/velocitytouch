@@ -5,11 +5,6 @@ import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import android.app.Activity;
-import android.view.Gravity;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
-
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -96,8 +91,6 @@ public class MetaAdsPlugin extends Plugin {
                     lp.gravity = (bannerAtTop ? Gravity.TOP : Gravity.BOTTOM) | Gravity.CENTER_HORIZONTAL;
                     root.addView(bannerContainer, lp);
 
-                    // Keep the banner clear of the status / gesture bar. If the system already
-                    // handled the insets (non edge-to-edge) the value is 0, so it never double-pads.
                     ViewCompat.setOnApplyWindowInsetsListener(bannerContainer,
                             new androidx.core.view.OnApplyWindowInsetsListener() {
                                 @Override
@@ -148,7 +141,6 @@ public class MetaAdsPlugin extends Plugin {
         reportBannerSize(insetPx);
     }
 
-    /** Reports banner height in CSS px (= dp in a WebView) so the page can leave room for it. */
     private void reportBannerSize(int insetPx) {
         float density = getContext().getResources().getDisplayMetrics().density;
         int heightDp = Math.round(50 + insetPx / density);
@@ -192,8 +184,7 @@ public class MetaAdsPlugin extends Plugin {
 
                     InterstitialAdListener listener = new InterstitialAdListener() {
                         @Override
-                        public void onInterstitialDisplayed(Ad a) {
-                        }
+                        public void onInterstitialDisplayed(Ad a) {}
 
                         @Override
                         public void onInterstitialDismissed(Ad a) {
@@ -209,17 +200,14 @@ public class MetaAdsPlugin extends Plugin {
 
                         @Override
                         public void onAdLoaded(Ad a) {
-                            // Deliberately NOT shown here: JS shows it at a calm moment.
                             notifyListeners("interstitialLoaded", new JSObject());
                         }
 
                         @Override
-                        public void onAdClicked(Ad a) {
-                        }
+                        public void onAdClicked(Ad a) {}
 
                         @Override
-                        public void onLoggingImpression(Ad a) {
-                        }
+                        public void onLoggingImpression(Ad a) {}
                     };
 
                     ad.loadAd(ad.buildLoadAdConfig().withAdListener(listener).build());
@@ -244,7 +232,6 @@ public class MetaAdsPlugin extends Plugin {
                 JSObject o = new JSObject();
                 boolean shown = false;
                 try {
-                    // Meta only pays for valid ads: never show an invalidated (expired) one
                     if (interstitial != null && interstitial.isAdLoaded() && !interstitial.isAdInvalidated()) {
                         interstitial.show();
                         shown = true;
